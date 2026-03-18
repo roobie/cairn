@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-18T01:23:38.970Z"
-last_activity: 2026-03-18 — Plan 01-02 complete (spec/vectors/*.json — 4 test vector files)
+status: in_progress
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-18T01:52:16.266Z"
+last_activity: 2026-03-18 — Plan 02-01 complete (go/ module with Store, Open, Close, errors)
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  total_plans: 4
+  completed_plans: 3
+  percent: 75
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Append-only immutability enforced at the storage level — if it's in cairn, it can't be altered or removed.
-**Current focus:** Phase 1 — Spec and Schema
+**Current focus:** Phase 2 — Go SDK
 
 ## Current Position
 
-Phase: 1 of 4 (Spec and Schema) — COMPLETE
-Plan: 2 of 2 in current phase (01-02 complete)
-Status: Phase 1 complete, ready for Phase 2
-Last activity: 2026-03-18 — Plan 01-02 complete (spec/vectors/*.json — 4 test vector files)
+Phase: 2 of 4 (Go SDK) — In Progress
+Plan: 1 of 2 in current phase (02-01 complete)
+Status: Phase 2 Plan 1 complete — foundation ready for Append/AppendBatch/Query (Plan 2)
+Last activity: 2026-03-18 — Plan 02-01 complete (go/ module with Store, Open, Close, errors)
 
-Progress: [██████████] 100% (phase 1 complete)
+Progress: [████████░░] 75% (3 of 4 plans complete)
 
 ## Performance Metrics
 
@@ -46,8 +46,10 @@ Progress: [██████████] 100% (phase 1 complete)
 | 01-spec-and-schema | 2 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 2 min
+- Last 5 plans: 2 min, 2 min, 3 min
 - Trend: baseline
+
+| Phase 02-go-sdk | 1 | 3 min | 3 min |
 
 *Updated after each plan completion*
 
@@ -69,6 +71,10 @@ Recent decisions affecting current work:
 - [Phase 01-02]: store_closed flag in input signals harness to attempt operation without opening store
 - [Phase 01-02]: payload_size_bytes field instructs harness to generate synthetic payload of that size (avoids 1MB literal in JSON)
 - [Phase 01-02]: immutability harness: setup via Append API, then raw SQL executed directly against SQLite connection
+- [Phase 02-go-sdk]: Module path cairn.dev/sdk/go (generic path matching project identity)
+- [Phase 02-go-sdk]: SQLITE_DBCONFIG_DEFENSIVE not accessible via database/sql conn.Raw() — PRAGMA trusted_schema = OFF used as fallback; immutability triggers provide actual enforcement
+- [Phase 02-go-sdk]: PRAGMAs applied via db.ExecContext in Open() (not RegisterConnectionHook) to avoid global driver pollution in library context
+- [Phase 02-go-sdk]: schemaSQL embedded as const string (go:embed cannot traverse above module root)
 
 ### Pending Todos
 
@@ -81,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T01:19:55.435Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-03-18T01:52:16.261Z
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None
