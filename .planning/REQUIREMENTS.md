@@ -46,13 +46,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Rust SDK
 
-- [ ] **RS-01**: Open(path) creates or opens a cairn store with zero configuration
-- [ ] **RS-02**: Close (Drop) cleanly shuts down with WAL checkpoint
-- [ ] **RS-03**: Append(topic, payload) returns EventID, atomic write
-- [ ] **RS-04**: AppendBatch(events) transactional multi-write, all-or-nothing
-- [ ] **RS-05**: Query(topic, start, end) returns iterator of events in insertion order
-- [ ] **RS-06**: All shared test vectors pass
-- [ ] **RS-07**: Uses rusqlite with bundled feature
+- [x] **RS-01**: Open(path) creates or opens a cairn store with zero configuration
+- [x] **RS-02**: Close (Drop) cleanly shuts down with WAL checkpoint
+- [x] **RS-03**: Append(topic, payload) returns EventID, atomic write
+- [x] **RS-04**: AppendBatch(events) transactional multi-write, all-or-nothing
+- [x] **RS-05**: Query(topic, start, end) returns iterator of events in insertion order
+- [x] **RS-06**: All shared test vectors pass
+- [x] **RS-07**: Uses rusqlite with bundled feature
 
 ### Documentation
 
@@ -131,13 +131,13 @@ Deferred to future release. Tracked but not in current roadmap.
 | TS-05 | Phase 3 | Pending |
 | TS-06 | Phase 3 | Pending |
 | TS-07 | Phase 3 | Pending |
-| RS-01 | Phase 3 | Pending |
-| RS-02 | Phase 3 | Pending |
-| RS-03 | Phase 3 | Pending |
-| RS-04 | Phase 3 | Pending |
-| RS-05 | Phase 3 | Pending |
-| RS-06 | Phase 3 | Pending |
-| RS-07 | Phase 3 | Pending |
+| RS-01 | Phase 3 | Complete |
+| RS-02 | Phase 3 | Complete |
+| RS-03 | Phase 3 | Complete |
+| RS-04 | Phase 3 | Complete |
+| RS-05 | Phase 3 | Complete |
+| RS-06 | Phase 3 | Complete |
+| RS-07 | Phase 3 | Complete |
 | DOC-01 | Phase 4 | Pending |
 | DOC-02 | Phase 4 | Pending |
 | DOC-03 | Phase 4 | Pending |

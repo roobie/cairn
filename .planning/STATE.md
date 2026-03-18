@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 02-02-PLAN.md
+stopped_at: Completed 03-02-PLAN.md
 last_updated: "2026-03-18T02:00:25.105Z"
 last_activity: 2026-03-18 — Plan 02-01 complete (go/ module with Store, Open, Close, errors)
 progress:
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: 2 of 4 (Go SDK) — In Progress
-Plan: 1 of 2 in current phase (02-01 complete)
-Status: Phase 2 Plan 1 complete — foundation ready for Append/AppendBatch/Query (Plan 2)
-Last activity: 2026-03-18 — Plan 02-01 complete (go/ module with Store, Open, Close, errors)
+Phase: 3 of 4 (TypeScript and Rust SDKs) — In Progress
+Plan: 2 of 2 in current phase (03-02 complete)
+Status: Phase 3 Plan 2 complete — Rust SDK complete with all vector tests passing
+Last activity: 2026-03-18 — Plan 03-02 complete (rs/ Rust SDK, Store, open, append, query, test vectors)
 
-Progress: [████████░░] 75% (3 of 4 plans complete)
+Progress: [██████████] 100% (4 of 4 plans complete in phases 1-3)
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [████████░░] 75% (3 of 4 plans complete)
 
 *Updated after each plan completion*
 | Phase 02-go-sdk P02 | 3min | 2 tasks | 2 files |
+| Phase 03-typescript-and-rust-sdks P02 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,9 @@ Recent decisions affecting current work:
 - [Phase 02-go-sdk]: schemaSQL embedded as const string (go:embed cannot traverse above module root)
 - [Phase 02-go-sdk]: os.ReadFile('../spec/vectors/') preferred over go:embed for test vectors — go:embed cannot traverse above module root; go test CWD is always the package dir
 - [Phase 02-go-sdk]: Query returns empty slice (not nil) when no events match; AppendBatch empty input returns []uint64{} immediately with no transaction
+- [Phase 03-02-rust-sdk]: Store.conn wrapped in Option<Connection> so Drop can take() ownership — enables clean close without unsafe code
+- [Phase 03-02-rust-sdk]: pub raw_conn() (doc-hidden) used instead of pub(crate) — tests/ directory is a separate crate and cannot access pub(crate) items
+- [Phase 03-02-rust-sdk]: Store implements Debug manually because rusqlite::Connection has no Debug impl
 
 ### Pending Todos
 

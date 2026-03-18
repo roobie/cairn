@@ -61,8 +61,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — TypeScript SDK (store, write/read, test vectors, tsdown build)
-- [ ] 03-02-PLAN.md — Rust SDK (store, write/read, test vectors, bundled SQLite)
+- [ ] 03-01-PLAN.md ï¿½ TypeScript SDK (store, write/read, test vectors, tsdown build)
+- [ ] 03-02-PLAN.md ï¿½ Rust SDK (store, write/read, test vectors, bundled SQLite)
 
 ### Phase 4: Documentation and Release
 **Goal**: A developer discovering cairn can understand why it exists, get started in under a minute in their language, and ship
@@ -86,5 +86,5 @@ Phases execute in numeric order: 1 â†’ 2 â†’ 3 â†’ 4
 |-------|----------------|--------|-----------|
 | 1. Spec and Schema | 2/2 | Complete    | 2026-03-18 |
 | 2. Go SDK | 2/2 | Complete    | 2026-03-18 |
-| 3. TypeScript and Rust SDKs | 0/2 | Not started | - |
+| 3. TypeScript and Rust SDKs | 1/2 | In Progress|  |
 | 4. Documentation and Release | 0/1 | Not started | - |
