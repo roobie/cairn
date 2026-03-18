@@ -136,9 +136,16 @@ pub struct BatchEvent {
 /// Call [`Store::close`] explicitly if you need to handle checkpoint errors.
 pub struct Store {
     /// The SQLite connection. Wrapped in Option so Drop can take ownership.
-    /// Exposed as pub(crate) so integration tests can execute raw SQL.
-    pub(crate) conn: Option<Connection>,
+    conn: Option<Connection>,
     closed: bool,
+}
+
+impl std::fmt::Debug for Store {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Store")
+            .field("closed", &self.closed)
+            .finish_non_exhaustive()
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -197,6 +204,19 @@ pub fn open(path: &str) -> Result<Store, Error> {
 // ---------------------------------------------------------------------------
 
 impl Store {
+    /// Returns a reference to the underlying SQLite connection.
+    ///
+    /// Intended for test harnesses that need to execute raw SQL (e.g. immutability
+    /// and query vector tests that must insert with exact timestamps).
+    ///
+    /// Panics if the store has already been closed.
+    #[doc(hidden)]
+    pub fn raw_conn(&self) -> &Connection {
+        self.conn
+            .as_ref()
+            .expect("raw_conn called on a closed store")
+    }
+
     /// Returns Ok(()) if the store is open, otherwise Error::StoreNotOpen.
     fn check_open(&self) -> Result<(), Error> {
         if self.closed {
