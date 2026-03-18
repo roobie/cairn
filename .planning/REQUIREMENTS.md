@@ -106,47 +106,47 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SPEC-01 | — | Pending |
-| SPEC-02 | — | Pending |
-| SPEC-03 | — | Pending |
-| SPEC-04 | — | Pending |
-| STOR-01 | — | Pending |
-| STOR-02 | — | Pending |
-| STOR-03 | — | Pending |
-| STOR-04 | — | Pending |
-| STOR-05 | — | Pending |
-| STOR-06 | — | Pending |
-| STOR-07 | — | Pending |
-| GO-01 | — | Pending |
-| GO-02 | — | Pending |
-| GO-03 | — | Pending |
-| GO-04 | — | Pending |
-| GO-05 | — | Pending |
-| GO-06 | — | Pending |
-| GO-07 | — | Pending |
-| TS-01 | — | Pending |
-| TS-02 | — | Pending |
-| TS-03 | — | Pending |
-| TS-04 | — | Pending |
-| TS-05 | — | Pending |
-| TS-06 | — | Pending |
-| TS-07 | — | Pending |
-| RS-01 | — | Pending |
-| RS-02 | — | Pending |
-| RS-03 | — | Pending |
-| RS-04 | — | Pending |
-| RS-05 | — | Pending |
-| RS-06 | — | Pending |
-| RS-07 | — | Pending |
-| DOC-01 | — | Pending |
-| DOC-02 | — | Pending |
-| DOC-03 | — | Pending |
+| SPEC-01 | Phase 1 | Pending |
+| SPEC-02 | Phase 1 | Pending |
+| SPEC-03 | Phase 1 | Pending |
+| SPEC-04 | Phase 1 | Pending |
+| STOR-01 | Phase 1 | Pending |
+| STOR-02 | Phase 1 | Pending |
+| STOR-03 | Phase 1 | Pending |
+| STOR-04 | Phase 1 | Pending |
+| STOR-05 | Phase 1 | Pending |
+| STOR-06 | Phase 1 | Pending |
+| STOR-07 | Phase 1 | Pending |
+| GO-01 | Phase 2 | Pending |
+| GO-02 | Phase 2 | Pending |
+| GO-03 | Phase 2 | Pending |
+| GO-04 | Phase 2 | Pending |
+| GO-05 | Phase 2 | Pending |
+| GO-06 | Phase 2 | Pending |
+| GO-07 | Phase 2 | Pending |
+| TS-01 | Phase 3 | Pending |
+| TS-02 | Phase 3 | Pending |
+| TS-03 | Phase 3 | Pending |
+| TS-04 | Phase 3 | Pending |
+| TS-05 | Phase 3 | Pending |
+| TS-06 | Phase 3 | Pending |
+| TS-07 | Phase 3 | Pending |
+| RS-01 | Phase 3 | Pending |
+| RS-02 | Phase 3 | Pending |
+| RS-03 | Phase 3 | Pending |
+| RS-04 | Phase 3 | Pending |
+| RS-05 | Phase 3 | Pending |
+| RS-06 | Phase 3 | Pending |
+| RS-07 | Phase 3 | Pending |
+| DOC-01 | Phase 4 | Pending |
+| DOC-02 | Phase 4 | Pending |
+| DOC-03 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 32 total
-- Mapped to phases: 0
-- Unmapped: 32 ⚠️
+- Mapped to phases: 32
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 after roadmap creation*
