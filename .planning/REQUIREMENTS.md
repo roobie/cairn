@@ -56,9 +56,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Documentation
 
-- [ ] **DOC-01**: Root README with "why cairn" positioning
-- [ ] **DOC-02**: 5-line quickstart per language in root README
-- [ ] **DOC-03**: Per-language README with high-level intro
+- [x] **DOC-01**: Root README with "why cairn" positioning
+- [x] **DOC-02**: 5-line quickstart per language in root README
+- [x] **DOC-03**: Per-language README with high-level intro
 
 ## v2 Requirements
 
@@ -138,9 +138,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | RS-05 | Phase 3 | Complete |
 | RS-06 | Phase 3 | Complete |
 | RS-07 | Phase 3 | Complete |
-| DOC-01 | Phase 4 | Pending |
-| DOC-02 | Phase 4 | Pending |
-| DOC-03 | Phase 4 | Pending |
+| DOC-01 | Phase 4 | Complete |
+| DOC-02 | Phase 4 | Complete |
+| DOC-03 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 32 total

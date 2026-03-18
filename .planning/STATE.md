@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-03-18T02:41:15.534Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-18T03:04:19.612Z"
 last_activity: 2026-03-18 — Plan 03-02 complete (rs/ Rust SDK, Store, open, append, query, test vectors)
 progress:
   total_phases: 4
-  completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 4
+  total_plans: 7
+  completed_plans: 7
   percent: 100
 ---
 
@@ -55,6 +55,7 @@ Progress: [██████████] 100% (4 of 4 plans complete in phases
 | Phase 02-go-sdk P02 | 3min | 2 tasks | 2 files |
 | Phase 03-typescript-and-rust-sdks P02 | 3min | 2 tasks | 3 files |
 | Phase 03-typescript-and-rust-sdks P01 | 4 | 2 tasks | 8 files |
+| Phase 04-documentation-and-release P04-01 | 5 min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,7 @@ Recent decisions affecting current work:
 - [Phase 03-02-rust-sdk]: Store implements Debug manually because rusqlite::Connection has no Debug impl
 - [Phase 03-typescript-and-rust-sdks]: Removed type:module from ts/package.json; added outExtensions to tsdown config to force .mjs/.cjs filenames for unambiguous dual ESM/CJS output
 - [Phase 03-typescript-and-rust-sdks]: _db getter exposes underlying better-sqlite3 Database for test harness raw SQL — prefix signals internal/test use, avoids second connection
+- [Phase 04-01]: Root README uses trail marker metaphor; BigInt and Drop notes prominent in TS and Rust READMEs
 
 ### Pending Todos
 
@@ -97,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T02:37:07.712Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-03-18T03:04:19.610Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
