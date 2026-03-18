@@ -84,7 +84,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Spec and Schema | 0/2 | Not started | - |
+| 1. Spec and Schema | 1/2 | In Progress|  |
 | 2. Go SDK | 0/2 | Not started | - |
 | 3. TypeScript and Rust SDKs | 0/2 | Not started | - |
 | 4. Documentation and Release | 0/1 | Not started | - |

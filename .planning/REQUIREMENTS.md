@@ -9,20 +9,20 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Spec
 
-- [ ] **SPEC-01**: Language-agnostic API spec document (api.md) defining the contract all SDKs implement
+- [x] **SPEC-01**: Language-agnostic API spec document (api.md) defining the contract all SDKs implement
 - [ ] **SPEC-02**: Shared test vectors covering: append single, append batch, query by range, query empty range, refuse update (error), refuse delete (error)
 - [ ] **SPEC-03**: Test vectors encode timestamps as quoted strings (not JSON numbers) and payloads as RFC 4648 base64
-- [ ] **SPEC-04**: Schema DDL without AUTOINCREMENT, with immutability triggers (no_update, no_delete)
+- [x] **SPEC-04**: Schema DDL without AUTOINCREMENT, with immutability triggers (no_update, no_delete)
 
 ### Storage
 
-- [ ] **STOR-01**: SQLite WAL mode enabled at Open time
-- [ ] **STOR-02**: Immutability triggers reject UPDATE and DELETE on events table
-- [ ] **STOR-03**: SQLITE_DBCONFIG_DEFENSIVE enabled at Open time
-- [ ] **STOR-04**: Nanosecond-precision timestamps stored as INTEGER
-- [ ] **STOR-05**: Opaque BLOB payloads (schema-on-read)
-- [ ] **STOR-06**: 1MB payload size limit with hard error on oversize
-- [ ] **STOR-07**: WAL checkpoint on Close
+- [x] **STOR-01**: SQLite WAL mode enabled at Open time
+- [x] **STOR-02**: Immutability triggers reject UPDATE and DELETE on events table
+- [x] **STOR-03**: SQLITE_DBCONFIG_DEFENSIVE enabled at Open time
+- [x] **STOR-04**: Nanosecond-precision timestamps stored as INTEGER
+- [x] **STOR-05**: Opaque BLOB payloads (schema-on-read)
+- [x] **STOR-06**: 1MB payload size limit with hard error on oversize
+- [x] **STOR-07**: WAL checkpoint on Close
 
 ### Go SDK
 
@@ -106,17 +106,17 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SPEC-01 | Phase 1 | Pending |
+| SPEC-01 | Phase 1 | Complete |
 | SPEC-02 | Phase 1 | Pending |
 | SPEC-03 | Phase 1 | Pending |
-| SPEC-04 | Phase 1 | Pending |
-| STOR-01 | Phase 1 | Pending |
-| STOR-02 | Phase 1 | Pending |
-| STOR-03 | Phase 1 | Pending |
-| STOR-04 | Phase 1 | Pending |
-| STOR-05 | Phase 1 | Pending |
-| STOR-06 | Phase 1 | Pending |
-| STOR-07 | Phase 1 | Pending |
+| SPEC-04 | Phase 1 | Complete |
+| STOR-01 | Phase 1 | Complete |
+| STOR-02 | Phase 1 | Complete |
+| STOR-03 | Phase 1 | Complete |
+| STOR-04 | Phase 1 | Complete |
+| STOR-05 | Phase 1 | Complete |
+| STOR-06 | Phase 1 | Complete |
+| STOR-07 | Phase 1 | Complete |
 | GO-01 | Phase 2 | Pending |
 | GO-02 | Phase 2 | Pending |
 | GO-03 | Phase 2 | Pending |
