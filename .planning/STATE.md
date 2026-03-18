@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "Completed 01-01-PLAN.md"
-last_updated: "2026-03-18T01:15:08Z"
-last_activity: 2026-03-18 — Plan 01-01 complete (spec/api.md + spec/schema.sql)
+status: completed
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-18T01:20:15.061Z"
+last_activity: 2026-03-18 — Plan 01-02 complete (spec/vectors/*.json — 4 test vector files)
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 13
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -25,28 +25,28 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: 1 of 4 (Spec and Schema)
-Plan: 1 of 2 in current phase (01-01 complete)
-Status: Executing
-Last activity: 2026-03-18 — Plan 01-01 complete (spec/api.md + spec/schema.sql)
+Phase: 1 of 4 (Spec and Schema) — COMPLETE
+Plan: 2 of 2 in current phase (01-02 complete)
+Status: Phase 1 complete, ready for Phase 2
+Last activity: 2026-03-18 — Plan 01-02 complete (spec/vectors/*.json — 4 test vector files)
 
-Progress: [█░░░░░░░░░] 13%
+Progress: [██████████] 100% (phase 1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
+- Total plans completed: 2
 - Average duration: 2 min
-- Total execution time: 2 min
+- Total execution time: 4 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-spec-and-schema | 1 | 2 min | 2 min |
+| 01-spec-and-schema | 2 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min
+- Last 5 plans: 2 min, 2 min
 - Trend: baseline
 
 *Updated after each plan completion*
@@ -66,6 +66,9 @@ Recent decisions affecting current work:
 - [01-01]: Query range [start, end] inclusive both ends (WHERE ts >= start AND ts <= end)
 - [01-01]: AppendBatch with empty input returns empty slice, no error — no transaction opened
 - [01-01]: SQLITE_DBCONFIG_DEFENSIVE documented per-language since no universal SQL PRAGMA exists
+- [Phase 01-02]: store_closed flag in input signals harness to attempt operation without opening store
+- [Phase 01-02]: payload_size_bytes field instructs harness to generate synthetic payload of that size (avoids 1MB literal in JSON)
+- [Phase 01-02]: immutability harness: setup via Append API, then raw SQL executed directly against SQLite connection
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T01:15:08Z
-Stopped at: Completed 01-01-PLAN.md
-Resume file: .planning/phases/01-spec-and-schema/01-02-PLAN.md
+Last session: 2026-03-18T01:19:55.435Z
+Stopped at: Completed 01-02-PLAN.md
+Resume file: None

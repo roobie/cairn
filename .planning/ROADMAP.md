@@ -12,7 +12,7 @@ Three language SDKs (Go, TypeScript, Rust) sharing a single canonical spec and t
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Spec and Schema** - Language-agnostic API spec, shared test vectors, and schema DDL establishing the cross-language contract
+- [x] **Phase 1: Spec and Schema** - Language-agnostic API spec, shared test vectors, and schema DDL establishing the cross-language contract (completed 2026-03-18)
 - [ ] **Phase 2: Go SDK** - Reference implementation that all other SDKs validate against
 - [ ] **Phase 3: TypeScript and Rust SDKs** - Both language SDKs implemented in parallel against the proven spec
 - [ ] **Phase 4: Documentation and Release** - Root README, per-language READMEs, and release preparation
@@ -84,7 +84,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Spec and Schema | 1/2 | In Progress|  |
+| 1. Spec and Schema | 2/2 | Complete   | 2026-03-18 |
 | 2. Go SDK | 0/2 | Not started | - |
 | 3. TypeScript and Rust SDKs | 0/2 | Not started | - |
 | 4. Documentation and Release | 0/1 | Not started | - |

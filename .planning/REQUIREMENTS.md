@@ -10,8 +10,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Spec
 
 - [x] **SPEC-01**: Language-agnostic API spec document (api.md) defining the contract all SDKs implement
-- [ ] **SPEC-02**: Shared test vectors covering: append single, append batch, query by range, query empty range, refuse update (error), refuse delete (error)
-- [ ] **SPEC-03**: Test vectors encode timestamps as quoted strings (not JSON numbers) and payloads as RFC 4648 base64
+- [x] **SPEC-02**: Shared test vectors covering: append single, append batch, query by range, query empty range, refuse update (error), refuse delete (error)
+- [x] **SPEC-03**: Test vectors encode timestamps as quoted strings (not JSON numbers) and payloads as RFC 4648 base64
 - [x] **SPEC-04**: Schema DDL without AUTOINCREMENT, with immutability triggers (no_update, no_delete)
 
 ### Storage
@@ -107,8 +107,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | SPEC-01 | Phase 1 | Complete |
-| SPEC-02 | Phase 1 | Pending |
-| SPEC-03 | Phase 1 | Pending |
+| SPEC-02 | Phase 1 | Complete |
+| SPEC-03 | Phase 1 | Complete |
 | SPEC-04 | Phase 1 | Complete |
 | STOR-01 | Phase 1 | Complete |
 | STOR-02 | Phase 1 | Complete |
