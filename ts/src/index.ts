@@ -157,7 +157,7 @@ export class Store {
     if (payload.length === 0) throw new EmptyPayloadError()
     if (payload.length > MAX_PAYLOAD_SIZE) throw new PayloadTooLargeError()
 
-    const ts = process.hrtime.bigint() // nanoseconds since arbitrary epoch; monotonic
+    const ts = BigInt(Date.now()) * 1_000_000n // nanoseconds since Unix epoch
     const result = this.insertStmt.run(topic, ts, payload)
     return result.lastInsertRowid as bigint // safe: defaultSafeIntegers(true)
   }
@@ -184,7 +184,7 @@ export class Store {
 
     const insertBatch = this._db.transaction((evts: BatchEvent[]) => {
       return evts.map((e) => {
-        const ts = process.hrtime.bigint()
+        const ts = BigInt(Date.now()) * 1_000_000n
         const r = this.insertStmt.run(e.topic, ts, e.payload)
         return r.lastInsertRowid as bigint // safe: defaultSafeIntegers(true)
       })
