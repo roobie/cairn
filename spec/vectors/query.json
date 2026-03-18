@@ -1,0 +1,144 @@
+{
+  "operation": "query",
+  "schema_version": "1",
+  "description": "Query operation test vectors. Covers insertion-order return, partial range, single-timestamp inclusive range, cross-topic empty result, time-range empty result, and StoreNotOpen. Timestamps are quoted strings (SPEC-03).",
+  "test_groups": [
+    {
+      "description": "happy path",
+      "tests": [
+        {
+          "tc_id": 1,
+          "comment": "query range includes both inserted events; events returned in insertion order (id ASC)",
+          "input": {
+            "events": [
+              { "topic": "sensor", "ts": "1710000000000000001", "payload": "AAEC" },
+              { "topic": "sensor", "ts": "1710000000000000002", "payload": "AwQF" }
+            ],
+            "query": {
+              "topic": "sensor",
+              "start": "1710000000000000000",
+              "end": "1710000000000000999"
+            }
+          },
+          "expected": {
+            "result": "valid",
+            "returned_count": 2,
+            "events": [
+              { "ts": "1710000000000000001", "payload": "AAEC" },
+              { "ts": "1710000000000000002", "payload": "AwQF" }
+            ]
+          }
+        },
+        {
+          "tc_id": 2,
+          "comment": "query range includes only the middle of 3 events; returns exactly one event",
+          "input": {
+            "events": [
+              { "topic": "sensor", "ts": "1710000000000000010", "payload": "aGVsbG8=" },
+              { "topic": "sensor", "ts": "1710000000000000020", "payload": "d29ybGQ=" },
+              { "topic": "sensor", "ts": "1710000000000000030", "payload": "Zm9v" }
+            ],
+            "query": {
+              "topic": "sensor",
+              "start": "1710000000000000015",
+              "end": "1710000000000000025"
+            }
+          },
+          "expected": {
+            "result": "valid",
+            "returned_count": 1,
+            "events": [
+              { "ts": "1710000000000000020", "payload": "d29ybGQ=" }
+            ]
+          }
+        },
+        {
+          "tc_id": 3,
+          "comment": "start == end matching exactly one event's timestamp; verifies inclusive range semantics",
+          "input": {
+            "events": [
+              { "topic": "sensor", "ts": "1710000000000000001", "payload": "aGVsbG8=" },
+              { "topic": "sensor", "ts": "1710000000000000002", "payload": "d29ybGQ=" }
+            ],
+            "query": {
+              "topic": "sensor",
+              "start": "1710000000000000001",
+              "end": "1710000000000000001"
+            }
+          },
+          "expected": {
+            "result": "valid",
+            "returned_count": 1,
+            "events": [
+              { "ts": "1710000000000000001", "payload": "aGVsbG8=" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "description": "empty results",
+      "tests": [
+        {
+          "tc_id": 4,
+          "comment": "query topic with no events returns empty result, not error",
+          "input": {
+            "events": [
+              { "topic": "sensor", "ts": "1710000000000000001", "payload": "aGVsbG8=" }
+            ],
+            "query": {
+              "topic": "other",
+              "start": "1710000000000000000",
+              "end": "1710000000000000999"
+            }
+          },
+          "expected": {
+            "result": "valid",
+            "returned_count": 0,
+            "events": []
+          }
+        },
+        {
+          "tc_id": 5,
+          "comment": "query time range with no overlap returns empty result, not error",
+          "input": {
+            "events": [
+              { "topic": "sensor", "ts": "1710000000000000001", "payload": "aGVsbG8=" }
+            ],
+            "query": {
+              "topic": "sensor",
+              "start": "2000000000000000000",
+              "end": "2000000000000000999"
+            }
+          },
+          "expected": {
+            "result": "valid",
+            "returned_count": 0,
+            "events": []
+          }
+        }
+      ]
+    },
+    {
+      "description": "error cases",
+      "tests": [
+        {
+          "tc_id": 6,
+          "comment": "operation on closed store triggers StoreNotOpen",
+          "input": {
+            "query": {
+              "topic": "sensor",
+              "start": "1710000000000000000",
+              "end": "1710000000000000999"
+            },
+            "store_closed": true
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "store_not_open"
+          }
+        }
+      ]
+    }
+  ]
+}
