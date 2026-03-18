@@ -28,7 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. spec/vectors/*.json test vectors cover: append single event, append batch, query by time range, query empty range, immutability rejection (UPDATE attempt), immutability rejection (DELETE attempt), with timestamps as quoted strings and payloads as RFC 4648 base64
   3. The schema DDL file exists with INTEGER PRIMARY KEY (no AUTOINCREMENT), the (topic, ts) composite index, and no_update / no_delete triggers
   4. The spec explicitly documents WAL mode, SQLITE_DBCONFIG_DEFENSIVE, nanosecond INTEGER timestamps, opaque BLOB payloads, and the 1MB payload hard limit
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 01-01: API spec document and schema DDL
