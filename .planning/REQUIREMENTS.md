@@ -26,13 +26,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Go SDK
 
-- [ ] **GO-01**: Open(path) creates or opens a cairn store with zero configuration
-- [ ] **GO-02**: Close() cleanly shuts down with WAL checkpoint
-- [ ] **GO-03**: Append(topic, payload) returns EventID, atomic write
-- [ ] **GO-04**: AppendBatch(events) transactional multi-write, all-or-nothing
-- [ ] **GO-05**: Query(topic, start, end) returns iterator of events in insertion order
-- [ ] **GO-06**: All shared test vectors pass
-- [ ] **GO-07**: Uses modernc.org/sqlite (pure Go, no CGo)
+- [x] **GO-01**: Open(path) creates or opens a cairn store with zero configuration
+- [x] **GO-02**: Close() cleanly shuts down with WAL checkpoint
+- [x] **GO-03**: Append(topic, payload) returns EventID, atomic write
+- [x] **GO-04**: AppendBatch(events) transactional multi-write, all-or-nothing
+- [x] **GO-05**: Query(topic, start, end) returns iterator of events in insertion order
+- [x] **GO-06**: All shared test vectors pass
+- [x] **GO-07**: Uses modernc.org/sqlite (pure Go, no CGo)
 
 ### TypeScript SDK
 
@@ -117,13 +117,13 @@ Deferred to future release. Tracked but not in current roadmap.
 | STOR-05 | Phase 1 | Complete |
 | STOR-06 | Phase 1 | Complete |
 | STOR-07 | Phase 1 | Complete |
-| GO-01 | Phase 2 | Pending |
-| GO-02 | Phase 2 | Pending |
-| GO-03 | Phase 2 | Pending |
-| GO-04 | Phase 2 | Pending |
-| GO-05 | Phase 2 | Pending |
-| GO-06 | Phase 2 | Pending |
-| GO-07 | Phase 2 | Pending |
+| GO-01 | Phase 2 | Complete |
+| GO-02 | Phase 2 | Complete |
+| GO-03 | Phase 2 | Complete |
+| GO-04 | Phase 2 | Complete |
+| GO-05 | Phase 2 | Complete |
+| GO-06 | Phase 2 | Complete |
+| GO-07 | Phase 2 | Complete |
 | TS-01 | Phase 3 | Pending |
 | TS-02 | Phase 3 | Pending |
 | TS-03 | Phase 3 | Pending |

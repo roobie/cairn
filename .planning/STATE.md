@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-18T01:52:16.266Z"
+status: completed
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-18T01:57:47.791Z"
 last_activity: 2026-03-18 — Plan 02-01 complete (go/ module with Store, Open, Close, errors)
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
   percent: 75
 ---
 
@@ -52,6 +52,7 @@ Progress: [████████░░] 75% (3 of 4 plans complete)
 | Phase 02-go-sdk | 1 | 3 min | 3 min |
 
 *Updated after each plan completion*
+| Phase 02-go-sdk P02 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase 02-go-sdk]: SQLITE_DBCONFIG_DEFENSIVE not accessible via database/sql conn.Raw() — PRAGMA trusted_schema = OFF used as fallback; immutability triggers provide actual enforcement
 - [Phase 02-go-sdk]: PRAGMAs applied via db.ExecContext in Open() (not RegisterConnectionHook) to avoid global driver pollution in library context
 - [Phase 02-go-sdk]: schemaSQL embedded as const string (go:embed cannot traverse above module root)
+- [Phase 02-go-sdk]: os.ReadFile('../spec/vectors/') preferred over go:embed for test vectors — go:embed cannot traverse above module root; go test CWD is always the package dir
+- [Phase 02-go-sdk]: Query returns empty slice (not nil) when no events match; AppendBatch empty input returns []uint64{} immediately with no transaction
 
 ### Pending Todos
 
@@ -87,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T01:52:16.261Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-18T01:57:47.789Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
