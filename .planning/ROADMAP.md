@@ -43,11 +43,11 @@ Plans:
   2. All shared spec test vectors pass under `go test`
   3. WAL checkpoint runs on Close, SQLITE_DBCONFIG_DEFENSIVE is enabled, and busy_timeout is set on every connection — observable by running the test suite against a store that was interrupted mid-write
   4. The SDK uses modernc.org/sqlite (pure Go, no CGo) — `go build` succeeds without a C toolchain
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Store layer (Open/Close, schema init, WAL/PRAGMA setup, immutability)
-- [ ] 02-02: Write path (Append, AppendBatch) and read path (Query) with test vector harness
+- [ ] 02-01-PLAN.md — Store layer (Open/Close, schema init, WAL/PRAGMA setup)
+- [ ] 02-02-PLAN.md — Write/read path (Append, AppendBatch, Query) with test vector harness
 
 ### Phase 3: TypeScript and Rust SDKs
 **Goal**: Both remaining language SDKs pass all spec test vectors — cairn is a working cross-language library
