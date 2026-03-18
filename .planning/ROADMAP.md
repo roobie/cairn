@@ -87,4 +87,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Spec and Schema | 2/2 | Complete    | 2026-03-18 |
 | 2. Go SDK | 2/2 | Complete    | 2026-03-18 |
 | 3. TypeScript and Rust SDKs | 2/2 | Complete    | 2026-03-18 |
-| 4. Documentation and Release | 1/1 | Complete   | 2026-03-18 |
+| 4. Documentation and Release | 1/1 | Complete    | 2026-03-18 |
