@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"time"
 
 	_ "modernc.org/sqlite" // register "sqlite" driver
 )
@@ -151,20 +152,129 @@ func (s *Store) Close() error {
 	return s.db.Close()
 }
 
-// Append inserts a single event and returns its EventID.
-// Stub — implemented in Plan 02.
+// Append inserts a single event and returns its EventID (>= 1).
+// Returns ErrStoreNotOpen, ErrEmptyTopic, ErrEmptyPayload, or ErrPayloadTooLarge on validation failure.
 func (s *Store) Append(topic string, payload []byte) (uint64, error) {
-	return 0, errors.New("not implemented")
+	if err := s.checkOpen(); err != nil {
+		return 0, err
+	}
+	if topic == "" {
+		return 0, ErrEmptyTopic
+	}
+	if len(payload) == 0 {
+		return 0, ErrEmptyPayload
+	}
+	if len(payload) > MaxPayloadSize {
+		return 0, ErrPayloadTooLarge
+	}
+
+	ts := time.Now().UnixNano()
+	result, err := s.db.ExecContext(context.Background(),
+		"INSERT INTO events (topic, ts, payload) VALUES (?, ?, ?)",
+		topic, ts, payload,
+	)
+	if err != nil {
+		return 0, fmt.Errorf("cairn: append: %w", err)
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("cairn: last insert id: %w", err)
+	}
+	if id <= 0 {
+		return 0, fmt.Errorf("cairn: append: unexpected rowid %d", id)
+	}
+	return uint64(id), nil
 }
 
-// AppendBatch inserts multiple events in a single transaction and returns their EventIDs.
-// Stub — implemented in Plan 02.
+// AppendBatch inserts multiple events in a single atomic transaction and returns their EventIDs.
+// If events is empty, returns an empty slice with no error and no transaction.
+// Validates all events before inserting any; returns the first validation error found.
 func (s *Store) AppendBatch(events []BatchEvent) ([]uint64, error) {
-	return nil, errors.New("not implemented")
+	if err := s.checkOpen(); err != nil {
+		return nil, err
+	}
+	if len(events) == 0 {
+		return []uint64{}, nil // no transaction, no error
+	}
+
+	// Validate ALL events before inserting any (all-or-nothing validation)
+	// Precedence: EmptyTopic > EmptyPayload > PayloadTooLarge
+	for _, e := range events {
+		if e.Topic == "" {
+			return nil, ErrEmptyTopic
+		}
+		if len(e.Payload) == 0 {
+			return nil, ErrEmptyPayload
+		}
+		if len(e.Payload) > MaxPayloadSize {
+			return nil, ErrPayloadTooLarge
+		}
+	}
+
+	ctx := context.Background()
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, fmt.Errorf("cairn: begin tx: %w", err)
+	}
+	defer tx.Rollback() // no-op after Commit
+
+	ids := make([]uint64, 0, len(events))
+	for _, e := range events {
+		ts := time.Now().UnixNano()
+		result, err := tx.ExecContext(ctx,
+			"INSERT INTO events (topic, ts, payload) VALUES (?, ?, ?)",
+			e.Topic, ts, e.Payload,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("cairn: batch insert: %w", err)
+		}
+		id, err := result.LastInsertId()
+		if err != nil {
+			return nil, fmt.Errorf("cairn: last insert id: %w", err)
+		}
+		ids = append(ids, uint64(id))
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, fmt.Errorf("cairn: commit: %w", err)
+	}
+	return ids, nil
 }
 
-// Query returns all events in the given topic with timestamp in [start, end] (inclusive).
-// Stub — implemented in Plan 02.
+// Query returns all events in the given topic with timestamp in [start, end] inclusive,
+// ordered by id ASC (insertion order).
+// Returns an empty slice (not an error) when no events match.
+// Returns ErrStoreNotOpen if the store has been closed.
 func (s *Store) Query(topic string, start, end int64) ([]Event, error) {
-	return nil, errors.New("not implemented")
+	if err := s.checkOpen(); err != nil {
+		return nil, err
+	}
+
+	rows, err := s.db.QueryContext(context.Background(),
+		`SELECT id, topic, ts, payload
+		 FROM events
+		 WHERE topic = ? AND ts >= ? AND ts <= ?
+		 ORDER BY id ASC`,
+		topic, start, end,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("cairn: query: %w", err)
+	}
+	defer rows.Close() // CRITICAL: must close to allow WAL checkpoint
+
+	var events []Event
+	for rows.Next() {
+		var e Event
+		if err := rows.Scan(&e.ID, &e.Topic, &e.TS, &e.Payload); err != nil {
+			return nil, fmt.Errorf("cairn: scan: %w", err)
+		}
+		events = append(events, e)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("cairn: rows: %w", err)
+	}
+	if events == nil {
+		events = []Event{} // return empty slice, not nil
+	}
+	return events, nil
 }
