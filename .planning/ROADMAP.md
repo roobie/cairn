@@ -58,11 +58,11 @@ Plans:
   2. A Rust caller can Open, Append, AppendBatch, Query, and Close (via Drop) â€” `cargo build` succeeds without system SQLite installed (bundled feature)
   3. All shared spec test vectors pass under `vitest run` (TypeScript) and `cargo test` (Rust)
   4. The TypeScript package builds dual ESM/CJS output with .d.ts declarations using tsdown
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TypeScript SDK (store layer, write/read path, test vector harness, tsdown build)
-- [ ] 03-02: Rust SDK (store layer, write/read path, test vector harness)
+- [ ] 03-01-PLAN.md — TypeScript SDK (store, write/read, test vectors, tsdown build)
+- [ ] 03-02-PLAN.md — Rust SDK (store, write/read, test vectors, bundled SQLite)
 
 ### Phase 4: Documentation and Release
 **Goal**: A developer discovering cairn can understand why it exists, get started in under a minute in their language, and ship
@@ -72,7 +72,7 @@ Plans:
   1. The root README explains the cairn constraint (append-only, no updates, no deletes) in the opening paragraph and gives a 5-line quickstart for each of Go, TypeScript, and Rust
   2. Each language directory has its own README with a high-level intro covering the API surface and any language-specific notes (BigInt for TypeScript, Drop for Rust)
   3. All three SDKs have passing test suites after a fresh clone â€” `go test ./...`, `vitest run`, and `cargo test` all succeed with no additional setup
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 04-01: Root README and per-language READMEs
