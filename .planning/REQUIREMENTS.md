@@ -36,13 +36,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### TypeScript SDK
 
-- [ ] **TS-01**: Open(path) creates or opens a cairn store with zero configuration
-- [ ] **TS-02**: Close() cleanly shuts down with WAL checkpoint
-- [ ] **TS-03**: Append(topic, payload) returns EventID, atomic write
-- [ ] **TS-04**: AppendBatch(events) transactional multi-write, all-or-nothing
-- [ ] **TS-05**: Query(topic, start, end) returns iterator of events in insertion order
-- [ ] **TS-06**: All shared test vectors pass
-- [ ] **TS-07**: Uses better-sqlite3 with .safeIntegers(true) for BigInt timestamps
+- [x] **TS-01**: Open(path) creates or opens a cairn store with zero configuration
+- [x] **TS-02**: Close() cleanly shuts down with WAL checkpoint
+- [x] **TS-03**: Append(topic, payload) returns EventID, atomic write
+- [x] **TS-04**: AppendBatch(events) transactional multi-write, all-or-nothing
+- [x] **TS-05**: Query(topic, start, end) returns iterator of events in insertion order
+- [x] **TS-06**: All shared test vectors pass
+- [x] **TS-07**: Uses better-sqlite3 with .safeIntegers(true) for BigInt timestamps
 
 ### Rust SDK
 
@@ -124,13 +124,13 @@ Deferred to future release. Tracked but not in current roadmap.
 | GO-05 | Phase 2 | Complete |
 | GO-06 | Phase 2 | Complete |
 | GO-07 | Phase 2 | Complete |
-| TS-01 | Phase 3 | Pending |
-| TS-02 | Phase 3 | Pending |
-| TS-03 | Phase 3 | Pending |
-| TS-04 | Phase 3 | Pending |
-| TS-05 | Phase 3 | Pending |
-| TS-06 | Phase 3 | Pending |
-| TS-07 | Phase 3 | Pending |
+| TS-01 | Phase 3 | Complete |
+| TS-02 | Phase 3 | Complete |
+| TS-03 | Phase 3 | Complete |
+| TS-04 | Phase 3 | Complete |
+| TS-05 | Phase 3 | Complete |
+| TS-06 | Phase 3 | Complete |
+| TS-07 | Phase 3 | Complete |
 | RS-01 | Phase 3 | Complete |
 | RS-02 | Phase 3 | Complete |
 | RS-03 | Phase 3 | Complete |

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-03-18T02:00:25.105Z"
-last_activity: 2026-03-18 — Plan 02-01 complete (go/ module with Store, Open, Close, errors)
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-18T02:37:07.714Z"
+last_activity: 2026-03-18 — Plan 03-02 complete (rs/ Rust SDK, Store, open, append, query, test vectors)
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
-  percent: 75
+  completed_phases: 3
+  total_plans: 6
+  completed_plans: 6
+  percent: 100
 ---
 
 # Project State
@@ -54,6 +54,7 @@ Progress: [██████████] 100% (4 of 4 plans complete in phases
 *Updated after each plan completion*
 | Phase 02-go-sdk P02 | 3min | 2 tasks | 2 files |
 | Phase 03-typescript-and-rust-sdks P02 | 3min | 2 tasks | 3 files |
+| Phase 03-typescript-and-rust-sdks P01 | 4 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [Phase 03-02-rust-sdk]: Store.conn wrapped in Option<Connection> so Drop can take() ownership — enables clean close without unsafe code
 - [Phase 03-02-rust-sdk]: pub raw_conn() (doc-hidden) used instead of pub(crate) — tests/ directory is a separate crate and cannot access pub(crate) items
 - [Phase 03-02-rust-sdk]: Store implements Debug manually because rusqlite::Connection has no Debug impl
+- [Phase 03-typescript-and-rust-sdks]: Removed type:module from ts/package.json; added outExtensions to tsdown config to force .mjs/.cjs filenames for unambiguous dual ESM/CJS output
+- [Phase 03-typescript-and-rust-sdks]: _db getter exposes underlying better-sqlite3 Database for test harness raw SQL — prefix signals internal/test use, avoids second connection
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T01:57:47.789Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-18T02:37:07.712Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
