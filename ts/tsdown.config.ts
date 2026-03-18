@@ -6,7 +6,7 @@ export default defineConfig({
   dts: true,
   outExtensions({ format }) {
     if (format === 'cjs') return { js: '.cjs' }
-    if (format === 'esm') return { js: '.mjs' }
+    if (format === 'es') return { js: '.mjs' }
     return {}
   },
 })
