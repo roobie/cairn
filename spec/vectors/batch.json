@@ -1,0 +1,99 @@
+{
+  "operation": "append_batch",
+  "schema_version": "1",
+  "description": "AppendBatch operation test vectors. Covers happy path (multi-event, empty batch, single-event), all-or-nothing failure on per-event errors, and StoreNotOpen.",
+  "test_groups": [
+    {
+      "description": "happy path",
+      "tests": [
+        {
+          "tc_id": 1,
+          "comment": "batch of 3 events with different topics returns 3 EventIDs in input order",
+          "input": {
+            "events": [
+              { "topic": "sensor", "payload": "aGVsbG8=" },
+              { "topic": "metrics", "payload": "d29ybGQ=" },
+              { "topic": "sensor", "payload": "AAECAwQF/f7/" }
+            ]
+          },
+          "expected": {
+            "result": "valid",
+            "event_id_count": 3
+          }
+        },
+        {
+          "tc_id": 2,
+          "comment": "empty batch returns empty EventID list with no error and no transaction",
+          "input": {
+            "events": []
+          },
+          "expected": {
+            "result": "valid",
+            "event_id_count": 0
+          }
+        },
+        {
+          "tc_id": 3,
+          "comment": "single-event batch returns one EventID",
+          "input": {
+            "events": [
+              { "topic": "sensor", "payload": "aGVsbG8=" }
+            ]
+          },
+          "expected": {
+            "result": "valid",
+            "event_id_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "description": "error cases",
+      "tests": [
+        {
+          "tc_id": 4,
+          "comment": "batch where second event has payload over 1MB triggers PayloadTooLarge; entire batch rejected (all-or-nothing)",
+          "input": {
+            "events": [
+              { "topic": "sensor", "payload": "aGVsbG8=" },
+              { "topic": "sensor", "payload_size_bytes": 1048577 },
+              { "topic": "sensor", "payload": "d29ybGQ=" }
+            ]
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "payload_too_large"
+          }
+        },
+        {
+          "tc_id": 5,
+          "comment": "batch where first event has empty topic triggers EmptyTopic; entire batch rejected",
+          "input": {
+            "events": [
+              { "topic": "", "payload": "aGVsbG8=" },
+              { "topic": "sensor", "payload": "d29ybGQ=" }
+            ]
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "empty_topic"
+          }
+        },
+        {
+          "tc_id": 6,
+          "comment": "operation on closed store triggers StoreNotOpen",
+          "input": {
+            "events": [
+              { "topic": "sensor", "payload": "aGVsbG8=" }
+            ],
+            "store_closed": true
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "store_not_open"
+          }
+        }
+      ]
+    }
+  ]
+}

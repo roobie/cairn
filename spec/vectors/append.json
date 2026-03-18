@@ -1,0 +1,105 @@
+{
+  "operation": "append",
+  "schema_version": "1",
+  "description": "Append operation test vectors. Covers happy path (including 1MB boundary and binary payload), error cases (PayloadTooLarge, EmptyTopic, EmptyPayload, StoreNotOpen).",
+  "test_groups": [
+    {
+      "description": "happy path",
+      "tests": [
+        {
+          "tc_id": 1,
+          "comment": "minimal valid event returns an EventID >= 1",
+          "input": {
+            "topic": "sensor",
+            "payload": "aGVsbG8="
+          },
+          "expected": {
+            "result": "valid",
+            "event_id_type": "uint64",
+            "event_id_min": "1"
+          }
+        },
+        {
+          "tc_id": 2,
+          "comment": "payload exactly at 1MB limit (1048576 bytes) is accepted",
+          "input": {
+            "topic": "sensor",
+            "payload_size_bytes": 1048576
+          },
+          "expected": {
+            "result": "valid",
+            "event_id_type": "uint64",
+            "event_id_min": "1"
+          }
+        },
+        {
+          "tc_id": 3,
+          "comment": "binary payload with non-ASCII bytes (0x00-0x05, 0xFD-0xFF) exercises binary encoding path",
+          "input": {
+            "topic": "binary",
+            "payload": "AAECAwQF/f7/"
+          },
+          "expected": {
+            "result": "valid",
+            "event_id_type": "uint64",
+            "event_id_min": "1"
+          }
+        }
+      ]
+    },
+    {
+      "description": "error cases",
+      "tests": [
+        {
+          "tc_id": 4,
+          "comment": "payload one byte over 1MB limit (1048577 bytes) triggers PayloadTooLarge",
+          "input": {
+            "topic": "sensor",
+            "payload_size_bytes": 1048577
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "payload_too_large"
+          }
+        },
+        {
+          "tc_id": 5,
+          "comment": "empty topic string triggers EmptyTopic",
+          "input": {
+            "topic": "",
+            "payload": "aGVsbG8="
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "empty_topic"
+          }
+        },
+        {
+          "tc_id": 6,
+          "comment": "empty payload (zero-length base64 string) triggers EmptyPayload",
+          "input": {
+            "topic": "sensor",
+            "payload": ""
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "empty_payload"
+          }
+        },
+        {
+          "tc_id": 7,
+          "comment": "operation on closed store triggers StoreNotOpen",
+          "input": {
+            "topic": "sensor",
+            "payload": "aGVsbG8=",
+            "store_closed": true
+          },
+          "expected": {
+            "result": "invalid",
+            "error_kind": "store_not_open"
+          }
+        }
+      ]
+    }
+  ]
+}
