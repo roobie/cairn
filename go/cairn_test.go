@@ -2,9 +2,14 @@ package cairn
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -314,5 +319,377 @@ func TestClose_WALCheckpoint(t *testing.T) {
 	info, err := os.Stat(walPath)
 	if err == nil && info.Size() > 0 {
 		t.Errorf("WAL file %s not checkpointed: size = %d bytes", walPath, info.Size())
+	}
+}
+
+// ---- Test Vector Harness ----
+
+// readVectorFile loads a spec vector JSON file.
+// go test sets CWD to the package directory (go/), so ../spec/vectors/ is correct.
+func readVectorFile(t *testing.T, name string) []byte {
+	t.Helper()
+	data, err := os.ReadFile("../spec/vectors/" + name)
+	if err != nil {
+		t.Fatalf("readVectorFile %s: %v", name, err)
+	}
+	return data
+}
+
+// decodePayload decodes a base64 payload string.
+// Empty string "" -> empty []byte (for empty_payload test cases).
+func decodePayload(t *testing.T, b64 string) []byte {
+	t.Helper()
+	if b64 == "" {
+		return []byte{}
+	}
+	data, err := base64.StdEncoding.DecodeString(b64)
+	if err != nil {
+		t.Fatalf("decodePayload: invalid base64 %q: %v", b64, err)
+	}
+	return data
+}
+
+// assertErrorKind checks that err matches the expected error_kind string.
+func assertErrorKind(t *testing.T, err error, kind string) {
+	t.Helper()
+	switch kind {
+	case "payload_too_large":
+		if !errors.Is(err, ErrPayloadTooLarge) {
+			t.Errorf("error kind: got %v, want ErrPayloadTooLarge", err)
+		}
+	case "empty_topic":
+		if !errors.Is(err, ErrEmptyTopic) {
+			t.Errorf("error kind: got %v, want ErrEmptyTopic", err)
+		}
+	case "empty_payload":
+		if !errors.Is(err, ErrEmptyPayload) {
+			t.Errorf("error kind: got %v, want ErrEmptyPayload", err)
+		}
+	case "store_not_open":
+		if !errors.Is(err, ErrStoreNotOpen) {
+			t.Errorf("error kind: got %v, want ErrStoreNotOpen", err)
+		}
+	case "immutability_violation":
+		if err == nil {
+			t.Errorf("error kind: got nil, want immutability_violation error")
+		} else if !strings.Contains(err.Error(), "updates not allowed") &&
+			!strings.Contains(err.Error(), "deletes not allowed") {
+			t.Errorf("error kind: got %v, want message containing 'updates not allowed' or 'deletes not allowed'", err)
+		}
+	default:
+		t.Errorf("assertErrorKind: unknown error kind %q", kind)
+	}
+}
+
+// ---- Append Vector Tests ----
+
+type appendVectorFile struct {
+	TestGroups []struct {
+		Tests []appendTestCase `json:"tests"`
+	} `json:"test_groups"`
+}
+
+type appendTestCase struct {
+	TCID    int    `json:"tc_id"`
+	Comment string `json:"comment"`
+	Input   struct {
+		Topic            string `json:"topic"`
+		Payload          string `json:"payload"`
+		PayloadSizeBytes int    `json:"payload_size_bytes"`
+		StoreClosed      bool   `json:"store_closed"`
+	} `json:"input"`
+	Expected struct {
+		Result     string `json:"result"`
+		ErrorKind  string `json:"error_kind"`
+		EventIDMin string `json:"event_id_min"`
+	} `json:"expected"`
+}
+
+func TestAppendVectors(t *testing.T) {
+	var vf appendVectorFile
+	if err := json.Unmarshal(readVectorFile(t, "append.json"), &vf); err != nil {
+		t.Fatalf("unmarshal append.json: %v", err)
+	}
+
+	for _, group := range vf.TestGroups {
+		for _, tc := range group.Tests {
+			tc := tc
+			t.Run(fmt.Sprintf("TC%d", tc.TCID), func(t *testing.T) {
+				s := openTestStore(t)
+				if tc.Input.StoreClosed {
+					s.Close()
+				}
+
+				var payload []byte
+				if tc.Input.PayloadSizeBytes > 0 {
+					payload = make([]byte, tc.Input.PayloadSizeBytes)
+				} else {
+					payload = decodePayload(t, tc.Input.Payload)
+				}
+
+				id, err := s.Append(tc.Input.Topic, payload)
+
+				if tc.Expected.Result == "valid" {
+					if err != nil {
+						t.Errorf("TC%d (%s): unexpected error: %v", tc.TCID, tc.Comment, err)
+						return
+					}
+					if tc.Expected.EventIDMin != "" {
+						minID, _ := strconv.ParseUint(tc.Expected.EventIDMin, 10, 64)
+						if id < minID {
+							t.Errorf("TC%d (%s): id = %d, want >= %d", tc.TCID, tc.Comment, id, minID)
+						}
+					}
+				} else {
+					if err == nil {
+						t.Errorf("TC%d (%s): expected error, got nil", tc.TCID, tc.Comment)
+						return
+					}
+					assertErrorKind(t, err, tc.Expected.ErrorKind)
+				}
+			})
+		}
+	}
+}
+
+// ---- Batch Vector Tests ----
+
+type batchVectorFile struct {
+	TestGroups []struct {
+		Tests []batchTestCase `json:"tests"`
+	} `json:"test_groups"`
+}
+
+type batchTestCase struct {
+	TCID    int    `json:"tc_id"`
+	Comment string `json:"comment"`
+	Input   struct {
+		Events []struct {
+			Topic            string `json:"topic"`
+			Payload          string `json:"payload"`
+			PayloadSizeBytes int    `json:"payload_size_bytes"`
+		} `json:"events"`
+		StoreClosed bool `json:"store_closed"`
+	} `json:"input"`
+	Expected struct {
+		Result       string `json:"result"`
+		ErrorKind    string `json:"error_kind"`
+		EventIDCount int    `json:"event_id_count"`
+	} `json:"expected"`
+}
+
+func TestBatchVectors(t *testing.T) {
+	var vf batchVectorFile
+	if err := json.Unmarshal(readVectorFile(t, "batch.json"), &vf); err != nil {
+		t.Fatalf("unmarshal batch.json: %v", err)
+	}
+
+	for _, group := range vf.TestGroups {
+		for _, tc := range group.Tests {
+			tc := tc
+			t.Run(fmt.Sprintf("TC%d", tc.TCID), func(t *testing.T) {
+				s := openTestStore(t)
+				if tc.Input.StoreClosed {
+					s.Close()
+				}
+
+				var batchEvents []BatchEvent
+				for _, e := range tc.Input.Events {
+					var payload []byte
+					if e.PayloadSizeBytes > 0 {
+						payload = make([]byte, e.PayloadSizeBytes)
+					} else {
+						payload = decodePayload(t, e.Payload)
+					}
+					batchEvents = append(batchEvents, BatchEvent{Topic: e.Topic, Payload: payload})
+				}
+				// If input.events was [] (empty JSON array), ensure we pass an empty slice not nil
+				if tc.Input.Events != nil && batchEvents == nil {
+					batchEvents = []BatchEvent{}
+				}
+
+				ids, err := s.AppendBatch(batchEvents)
+
+				if tc.Expected.Result == "valid" {
+					if err != nil {
+						t.Errorf("TC%d (%s): unexpected error: %v", tc.TCID, tc.Comment, err)
+						return
+					}
+					if len(ids) != tc.Expected.EventIDCount {
+						t.Errorf("TC%d (%s): len(ids) = %d, want %d", tc.TCID, tc.Comment, len(ids), tc.Expected.EventIDCount)
+					}
+				} else {
+					if err == nil {
+						t.Errorf("TC%d (%s): expected error, got nil", tc.TCID, tc.Comment)
+						return
+					}
+					assertErrorKind(t, err, tc.Expected.ErrorKind)
+				}
+			})
+		}
+	}
+}
+
+// ---- Query Vector Tests ----
+
+type queryVectorFile struct {
+	TestGroups []struct {
+		Tests []queryTestCase `json:"tests"`
+	} `json:"test_groups"`
+}
+
+type queryTestCase struct {
+	TCID    int    `json:"tc_id"`
+	Comment string `json:"comment"`
+	Input   struct {
+		Events []struct {
+			Topic   string `json:"topic"`
+			TS      string `json:"ts"`
+			Payload string `json:"payload"`
+		} `json:"events"`
+		Query struct {
+			Topic string `json:"topic"`
+			Start string `json:"start"`
+			End   string `json:"end"`
+		} `json:"query"`
+		StoreClosed bool `json:"store_closed"`
+	} `json:"input"`
+	Expected struct {
+		Result        string `json:"result"`
+		ErrorKind     string `json:"error_kind"`
+		ReturnedCount int    `json:"returned_count"`
+		Events        []struct {
+			TS      string `json:"ts"`
+			Payload string `json:"payload"`
+		} `json:"events"`
+	} `json:"expected"`
+}
+
+func TestQueryVectors(t *testing.T) {
+	var vf queryVectorFile
+	if err := json.Unmarshal(readVectorFile(t, "query.json"), &vf); err != nil {
+		t.Fatalf("unmarshal query.json: %v", err)
+	}
+
+	for _, group := range vf.TestGroups {
+		for _, tc := range group.Tests {
+			tc := tc
+			t.Run(fmt.Sprintf("TC%d", tc.TCID), func(t *testing.T) {
+				s := openTestStore(t)
+
+				// Setup: insert events with exact timestamps via raw SQL (NOT Append)
+				if !tc.Input.StoreClosed {
+					ctx := context.Background()
+					for _, e := range tc.Input.Events {
+						ts, err := strconv.ParseInt(e.TS, 10, 64)
+						if err != nil {
+							t.Fatalf("TC%d: parse ts %q: %v", tc.TCID, e.TS, err)
+						}
+						payload := decodePayload(t, e.Payload)
+						if _, err := s.db.ExecContext(ctx,
+							"INSERT INTO events (topic, ts, payload) VALUES (?, ?, ?)",
+							e.Topic, ts, payload,
+						); err != nil {
+							t.Fatalf("TC%d: setup INSERT: %v", tc.TCID, err)
+						}
+					}
+				}
+
+				if tc.Input.StoreClosed {
+					s.Close()
+				}
+
+				start, _ := strconv.ParseInt(tc.Input.Query.Start, 10, 64)
+				end, _ := strconv.ParseInt(tc.Input.Query.End, 10, 64)
+				events, err := s.Query(tc.Input.Query.Topic, start, end)
+
+				if tc.Expected.Result == "valid" {
+					if err != nil {
+						t.Errorf("TC%d (%s): unexpected error: %v", tc.TCID, tc.Comment, err)
+						return
+					}
+					if len(events) != tc.Expected.ReturnedCount {
+						t.Errorf("TC%d (%s): len(events) = %d, want %d", tc.TCID, tc.Comment, len(events), tc.Expected.ReturnedCount)
+						return
+					}
+					for i, exp := range tc.Expected.Events {
+						expTS, _ := strconv.ParseInt(exp.TS, 10, 64)
+						expPayload := decodePayload(t, exp.Payload)
+						if events[i].TS != expTS {
+							t.Errorf("TC%d (%s): events[%d].TS = %d, want %d", tc.TCID, tc.Comment, i, events[i].TS, expTS)
+						}
+						if string(events[i].Payload) != string(expPayload) {
+							t.Errorf("TC%d (%s): events[%d].Payload mismatch", tc.TCID, tc.Comment, i)
+						}
+					}
+				} else {
+					if err == nil {
+						t.Errorf("TC%d (%s): expected error, got nil", tc.TCID, tc.Comment)
+						return
+					}
+					assertErrorKind(t, err, tc.Expected.ErrorKind)
+				}
+			})
+		}
+	}
+}
+
+// ---- Immutability Vector Tests ----
+
+type immutabilityVectorFile struct {
+	TestGroups []struct {
+		Tests []immutabilityTestCase `json:"tests"`
+	} `json:"test_groups"`
+}
+
+type immutabilityTestCase struct {
+	TCID    int    `json:"tc_id"`
+	Comment string `json:"comment"`
+	Input   struct {
+		Setup []struct {
+			Topic   string `json:"topic"`
+			Payload string `json:"payload"`
+		} `json:"setup"`
+		SQL string `json:"sql"`
+	} `json:"input"`
+	Expected struct {
+		Result               string `json:"result"`
+		ErrorKind            string `json:"error_kind"`
+		ErrorMessageContains string `json:"error_message_contains"`
+	} `json:"expected"`
+}
+
+func TestImmutabilityVectors(t *testing.T) {
+	var vf immutabilityVectorFile
+	if err := json.Unmarshal(readVectorFile(t, "immutability.json"), &vf); err != nil {
+		t.Fatalf("unmarshal immutability.json: %v", err)
+	}
+
+	for _, group := range vf.TestGroups {
+		for _, tc := range group.Tests {
+			tc := tc
+			t.Run(fmt.Sprintf("TC%d", tc.TCID), func(t *testing.T) {
+				s := openTestStore(t)
+
+				// Setup: insert events via Append API
+				for _, e := range tc.Input.Setup {
+					payload := decodePayload(t, e.Payload)
+					if _, err := s.Append(e.Topic, payload); err != nil {
+						t.Fatalf("TC%d: setup Append: %v", tc.TCID, err)
+					}
+				}
+
+				// Execute the raw SQL bypass attempt directly against the SQLite connection
+				_, err := s.db.ExecContext(context.Background(), tc.Input.SQL)
+
+				if err == nil {
+					t.Errorf("TC%d (%s): expected error, got nil — immutability trigger did not fire", tc.TCID, tc.Comment)
+					return
+				}
+				if !strings.Contains(err.Error(), tc.Expected.ErrorMessageContains) {
+					t.Errorf("TC%d (%s): error %q does not contain %q", tc.TCID, tc.Comment, err.Error(), tc.Expected.ErrorMessageContains)
+				}
+			})
+		}
 	}
 }
